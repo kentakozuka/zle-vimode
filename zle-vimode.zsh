@@ -6,28 +6,31 @@ autoload -Uz colors; colors
 autoload -Uz add-zsh-hook
 autoload -Uz terminfo
 autoload -Uz is-at-least
+autoload -Uz vcs_info
 
-terminfo_down_sc=$terminfo[cud1]$terminfo[cuu1]$terminfo[sc]$terminfo[cud1]
-left_down_prompt_preexec() {
-    print -rn -- $terminfo[el]
-}
-add-zsh-hook preexec left_down_prompt_preexec
+setopt prompt_subst
+zstyle ':vcs_info:*' formats '%s][* %F{green}%b%f'
+zstyle ':vcs_info:*' actionformats '%s][* %F{green}%b%f(%F{red}%a%f)'
+precmd() { vcs_info }
+uname="%F{123}%n"
+mname="%F{200}%m"
+cpath="%F{041}%~"
+myprompt=$'[${vcs_info_msg_0_}][${uname}$fg[white]@${mname}$fg[white]:${cpath}$fg[white]]'
 
-function zle-keymap-select zle-line-init zle-line-finish
-{
+function zle-keymap-select zle-line-init zle-line-finish {
     case $KEYMAP in
         main|viins)
-            PROMPT_2="$fg[cyan]-- INSERT --$reset_color"
+            PROMPT_2="%F{033}%K{051} INSERT %F{255}%K{232}"
             ;;
         vicmd)
-            PROMPT_2="$fg[white]-- NORMAL --$reset_color"
+            PROMPT_2="%F{065}%K{047} NORMAL %F{255}%K{232}"
             ;;
         vivis|vivli)
-            PROMPT_2="$fg[yellow]-- VISUAL --$reset_color"
+            PROMPT_2="%F{203}%K{220} VISUAL %F{255}%K{232}"
             ;;
     esac
-
-    PROMPT="%{$terminfo_down_sc$PROMPT_2$terminfo[rc]%}%(?.%{${fg[green]}%}.%{${fg[red]}%})${MY_PROMPT:-[%n]}%{${reset_color}%}%# "
+    PROMPT="${myprompt}
+$PROMPT_2 "
     zle reset-prompt
 }
 
@@ -80,8 +83,8 @@ bindkey -M viins '^W'  backward-kill-word
 bindkey -M viins '^Y'  yank
 
 # Make more vim-like behaviors
-bindkey -M vicmd 'gg' beginning-of-line
-bindkey -M vicmd 'G'  end-of-line
+bindkey -M vicmd 'H' beginning-of-line
+bindkey -M vicmd 'L'  end-of-line
 
 # User-defined widgets
 peco-select-history()
