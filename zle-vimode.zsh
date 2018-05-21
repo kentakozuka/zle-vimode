@@ -114,19 +114,6 @@ zle -N peco-select-history
 # Assign keybind
 bindkey '^r' peco-select-history
 
-# Enter
-#do-enter() {
-#    if [ -n "$BUFFER" ]; then
-#        zle accept-line
-#        return
-#    fi
-#
-#    /bin/ls -F
-#    zle reset-prompt
-#}
-#zle -N do-enter
-#bindkey '^m' do-enter
-
 # https://github.com/zsh-users/zsh-history-substring-search
 has_widgets 'history-substring-search-up' &&
     bindkey -M emacs '^P' history-substring-search-up
