@@ -29,8 +29,8 @@ function zle-keymap-select zle-line-init zle-line-finish {
             PROMPT_2="%F{203}%K{220} VISUAL %F{255}%K{232}"
             ;;
     esac
-    PROMPT="${myprompt}
-$PROMPT_2 "
+    PROMPT="$PROMPT_2${myprompt}
+$ "
     zle reset-prompt
 }
 
